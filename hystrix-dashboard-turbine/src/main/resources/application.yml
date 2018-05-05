@@ -1,0 +1,27 @@
+server:
+  port: 0
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+spring:
+  application:
+    name: hystrix-turbine
+eureka:
+  client:
+    service-url:
+      defaultZone: http://cloudServerSlave1:8781/eureka/,http://cloudServerSlave2:8782/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+turbine:
+  app-config: first-service-invoker
+  cluster-name-expression: "'default'"
+
+
+
+

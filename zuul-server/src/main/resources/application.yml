@@ -1,0 +1,51 @@
+server:
+  port: 0
+# actuator management
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+# actuator info
+info:
+  app:
+    encoding:UTF-8
+    java.source:1.8
+    java.traget:1.8
+    name:invoker1
+
+logging:
+  level:
+    org.springframework.web.servlet.DispatcherServlet: DEBUG
+spring:
+  application:
+    name: zuul-gateway
+  sleuth:
+    sampler:
+      probability: 1.0
+  zipkin:
+    base-url: http://zipkin-server:9411/
+    discovery-client-enabled: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://cloudServerSlave1:8781/eureka/,http://cloudServerSlave2:8782/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+zuul:
+  routes:
+    first-service-invoker:
+      path: /invoker/**
+    provider1:
+      path: /provider1/**
+      url: first-service-provider
+    restTestRoute:
+      path: /test-zuul-filter/**
+      serviceId: first-service-provider
+  #配置敏感数据头,使其不传播到源服务(sensitiveHeaders是一个黑名单，默认不是空的)
+  sensitive-headers: Cookie,Set-Cookie
+

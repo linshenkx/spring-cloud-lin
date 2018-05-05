@@ -1,0 +1,62 @@
+server:
+  port: 0
+
+# actuator management
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+# actuator info
+info:
+  app:
+    encoding:UTF-8
+    java.source:1.8
+    java.traget:1.8
+    name:invoker1
+
+spring:
+  application:
+    name: first-service-invoker
+  sleuth:
+    sampler:
+      probability: 1.0
+  zipkin:
+    base-url: http://zipkin-server:9411/
+    locator:
+      discovery:
+        enabled: true
+  rabbitmq:
+    host: 116.196.113.170
+    port: 5672
+    username: guest
+    password: guest
+eureka:
+  client:
+    service-url:
+      defaultZone: http://cloudServerSlave1:8781/eureka/,http://cloudServerSlave2:8782/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+
+
+#对特定名称的服务提供者使用特定的负载均衡策略
+first-service-provider:
+  ribbon:
+    #逻辑组件
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule
+    #存活检测组件
+    #NFLoadBalancerPingClassName: com.linshen.eurekaclientinvoker.config.ribbonComponent.MyPing
+    #服务器列表,用于在脱离Eureka工作时
+    # lisstOfServers: http://localhost:8681/,http://localhost:8682/
+
+#全局开关对hystrix的支持
+feign:
+  hystrix:
+    enabled: true
+logging:
+  level:
+    org.springframework.web.servlet.DispatcherServlet: DEBUG

@@ -1,0 +1,23 @@
+server:
+  port: 0
+spring:
+  application:
+    name: zipkin-server
+
+# actuator management
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://cloudServerSlave1:8781/eureka/,http://cloudServerSlave2:8782/eureka/
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
